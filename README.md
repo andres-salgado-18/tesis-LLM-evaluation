@@ -46,7 +46,7 @@ python main.py --task embed --input outputs/generaciones.parquet --emb_model tex
 
 ------------------------------------------------------------------------
 
-## 🛠️ Parámetros de la CLI
+## Parámetros de la CLI
 
 | Argumento       | Descripción                                             | Por defecto              |
 |----------------|---------------------------------------------------------|--------------------------|
@@ -58,4 +58,10 @@ python main.py --task embed --input outputs/generaciones.parquet --emb_model tex
 | `--max_tokens` | Límite de tokens por respuesta                          | `500`                    |
 | `--emb_model`  | Modelo para embeddings (local o API)                    | `text-embedding-3-small` |
 | `--batch_size` | Tamaño del lote de procesamiento                        | `64`                     |
+
+
+
+## TODO
+- Soporte a modelos generativos de otra familia
+- Código para análisis de los embeddings
 
