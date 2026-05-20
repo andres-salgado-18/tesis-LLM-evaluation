@@ -107,3 +107,9 @@ def load_responses(path):
                 responses[cid] = f"API_ERROR_{status_code}: {error_info}"
 
     return responses
+
+def load_dataset_parquet(path: str) -> pd.DataFrame:
+
+    df = pd.read_parquet(path)
+
+    return df
