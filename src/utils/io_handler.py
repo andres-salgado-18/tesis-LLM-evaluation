@@ -113,3 +113,11 @@ def load_dataset_parquet(path: str) -> pd.DataFrame:
     df = pd.read_parquet(path)
 
     return df
+
+def parquet_to_csv(path_input_parquet, path_output_csv):
+    df = pd.read_parquet(path_input_parquet)
+    df.to_csv(path_output_csv, index=False)
+
+def csv_to_parquet(path_input_csv, path_output_parquet):
+    df = pd.read_csv(path_input_csv)
+    df.to_parquet(path_output_parquet, index=False)

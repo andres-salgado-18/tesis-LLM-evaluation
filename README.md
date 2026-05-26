@@ -1,12 +1,11 @@
 # tesis-LLM-evaluation
 # Guía de Operación: LLM Experimentation Pipeline
 
-Código para la generación de respuestas, embeddings y análisis. Por ahora, para la parte de generación se usa la API de OpenAI, mientras que para la generación embeddings (tanto del prompt como de la respuesta) se pueden generar de forma local (`sentence-transformers`) y mediante la API de OpenAI.
+Código para la generación de respuestas, embeddings y análisis. Para la parte de generación se usa la API de OpenAI, mientras que para la generación embeddings (tanto del prompt como de la respuesta) se pueden generar de forma local (`sentence-transformers`) y mediante la API de OpenAI.
 
 Para utilizar los modelos vía OpenAI API, es necesario definir la variable de entorno `OPENAI_API_KEY`. El código maneja esto mediante la lectura de un archivo `.env`.
 
-
-## Comandos de Ejecución
+## Comandos de Ejecución para Generación
 
 ### 1. Generación de Texto (OpenAI Batch API)
 
@@ -46,7 +45,7 @@ python main.py --task embed --input outputs/generaciones.parquet --emb_model tex
 
 ------------------------------------------------------------------------
 
-## Parámetros de la CLI
+### Parámetros de la CLI
 
 | Argumento       | Descripción                                             | Por defecto              |
 |----------------|---------------------------------------------------------|--------------------------|
@@ -61,7 +60,6 @@ python main.py --task embed --input outputs/generaciones.parquet --emb_model tex
 
 
 
-## TODO
-- Soporte a modelos generativos de otra familia
-- Código para análisis de los embeddings
+## Análisis (en desarrollo)
+La parte de análisis por ahora se está llevando a cabo en el jupyter notebook `Analysis`. Cuando estén definidas las métricas y gráficos a utilizar, el código pasará mayormente a `src/analysis` y `src/metrics`.
 
