@@ -18,7 +18,7 @@ class OpenAIBatchPipeline:
         """
         self.runner = runner
 
-    def run(self, df, config, base_path="outputs", existing_batch_id=None):
+    def run(self, df, config, base_path="outputs", existing_batch_id=None, run_id=None):
         """
         Executes the generative pipeline by either starting a new batch or recovering an existing one.
 
@@ -29,6 +29,10 @@ class OpenAIBatchPipeline:
             existing_batch_id (str, optional): If provided, the pipeline skips the upload and 
                                                creation steps, moving directly to monitoring 
                                                and downloading the specified batch.
+            run_id (str, optional): Unique identifier for a specific experimental execution.
+                                Required when recovering an existing batch to ensure
+                                consistent file naming and artifact alignment across
+                                input, response, and parquet outputs.
 
         Returns:
             tuple: (pd.DataFrame, str) The DataFrame aligned with generated responses 
@@ -38,18 +42,28 @@ class OpenAIBatchPipeline:
         
         
         if existing_batch_id:
-            print(f"Re-engaging with existing batch: {existing_batch_id}")
-            output_path = self.runner.recover_batch(existing_batch_id, config, base_path)
+
+            if run_id is None:
+                raise ValueError(
+                    "run_id is required when recovering a batch."
+                )
+
+            print(
+                f"Re-engaging with existing batch: "
+                f"{existing_batch_id}"
+            )
+
+            output_path = self.runner.recover_batch(existing_batch_id,config,run_id,base_path)
         else:
             
-            output_path = self.runner.run_batch(df, config, base_path)
+            output_path, run_id = self.runner.run_batch(df, config, base_path)
 
         responses = load_responses(output_path)
         
         df_out = df.copy()
         df_out["response"] = df_out["index"].apply(lambda x: f"idx_{x}").map(responses)
 
-        out_path = f"{base_path}/{config.id()}.parquet"
+        out_path = f"{base_path}/{config.id()}_{run_id}_.parquet"
         df_out.to_parquet(out_path, index=False)
 
         return df_out, out_path

@@ -1,7 +1,7 @@
 import pandas as pd
 import time
 import json
-
+from datetime import datetime
 class OpenAIBatchGenerator:
     """
     Handles the low-level mechanics of the OpenAI Batch API.
@@ -136,15 +136,6 @@ class OpenAIBatchGenerator:
 
         Returns:
             str: The path to the downloaded responses file.
-        """"""
-        Retrieves and saves the results from a completed batch job.
-
-        Args:
-            batch: The completed OpenAI batch object.
-            out_path (str): Path where the responses will be saved.
-
-        Returns:
-            str: The path to the downloaded responses file.
         """
         file_id = batch.output_file_id
         if file_id is None:
@@ -185,9 +176,10 @@ class OpenAIBatchRunner:
             str: Path to the final response file.
         """
         exp_id = config.id()
+        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        input_path = f"{base_path}/{exp_id}_input.jsonl"
-        output_path = f"{base_path}/{exp_id}_responses.jsonl"
+        input_path = f"{base_path}/{exp_id}_{run_id}_input.jsonl"
+        output_path = f"{base_path}/{exp_id}_{run_id}_responses.jsonl"
 
         jsonl_path = self.generator.create_batch_file(
             df=df,
@@ -199,17 +191,18 @@ class OpenAIBatchRunner:
 
         file_id = self.generator.upload_file(jsonl_path)
         batch_id = self.generator.create_batch(file_id)
+        print(f"[BATCH ID] {batch_id}")
         batch = self.generator.wait_batch(batch_id)
 
         output_path = self.generator.download_results(batch, out_path=output_path)
 
-        return output_path
-    def recover_batch(self, batch_id: str, config, base_path="outputs"):
+        return output_path, run_id
+    def recover_batch(self, batch_id: str, config,run_id: str, base_path="outputs"):
         """
         Recovers working batch if connection failed.
         """
         exp_id = config.id()
-        output_path = f"{base_path}/{exp_id}_responses.jsonl"
+        output_path = f"{base_path}/{exp_id}_{run_id}_responses.jsonl"
         
 
         batch = self.generator.wait_batch(batch_id)

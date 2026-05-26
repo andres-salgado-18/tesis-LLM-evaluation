@@ -21,7 +21,7 @@ python main.py --task generate --input data/dataset.csv --gen_model gpt-4o-mini 
 Si el script se interrumpe, se puede retomar el proceso usando el ID del batch de la API de OpenAI:
 
 ``` bash
-python main.py --task generate --input data/dataset.csv --batch_id batch_abc123
+python main.py --task generate --input data/dataset.csv --batch_id batch_abc123 --run_id 20260526_211500
 ```
 
 ------------------------------------------------------------------------
@@ -57,7 +57,7 @@ python main.py --task embed --input outputs/generaciones.parquet --emb_model tex
 | `--max_tokens` | Límite de tokens por respuesta                          | `500`                    |
 | `--emb_model`  | Modelo para embeddings (local o API)                    | `text-embedding-3-small` |
 | `--batch_size` | Tamaño del lote de procesamiento                        | `64`                     |
-
+| `--run_id` | Identificador único de ejecución (por ejemplo `20260526_211500`) utilizado para recuperar un batch existente y mantener consistencia entre archivos generados         |      `None`              |
 
 
 ## Análisis (en desarrollo)

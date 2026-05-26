@@ -27,7 +27,7 @@ def main():
     
     # NUEVO: Argumento para recuperar un batch fallido
     parser.add_argument("--batch_id", type=str, default=None, help="Optional: OpenAI Batch ID to recover an existing process")
-    
+    parser.add_argument("--run_id", type=str, default=None, help="Optional: Run identifier required for batch recovery")
     gen_group = parser.add_argument_group("Generation Options (OpenAI API)")
     gen_group.add_argument("--gen_model", type=str, default="gpt-4o-mini", help="OpenAI model name")
     gen_group.add_argument("--temp", type=float, default=0.1, help="Temperature")
@@ -63,8 +63,12 @@ def main():
         )
 
         if args.batch_id:
+            if args.run_id is None:
+                raise ValueError(
+                    "--run_id is required when using --batch_id"
+                )
             print(f"RECOVERING MODE: Connecting to batch {args.batch_id}")
-            pipeline.run(df, config, existing_batch_id=args.batch_id)
+            pipeline.run(df, config, existing_batch_id=args.batch_id, run_id=args.run_id)
         else:
             print(f"NEW RUN: Executing generation with {args.gen_model}")
             run_experiments(df, pipeline, [config])
@@ -95,7 +99,6 @@ def main():
         
         run_experiments(df, pipeline, configs)
 
-    #todo: opción de análisis de embeddings, usando 'metrics'
 
     print("Process completed successfully.")
 
